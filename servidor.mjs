@@ -3,8 +3,8 @@ import { readFile, stat } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 const root=path.dirname(fileURLToPath(import.meta.url));
-const publicFiles=new Set(['index.html','estilos.css','experiencia.css','adriana.css','configuracion.js','datos.js','servicios.js','qrcode.js','app.js','experiencia.js']);
-const types={'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.js':'text/javascript; charset=utf-8','.png':'image/png','.jpg':'image/jpeg','.jpeg':'image/jpeg','.webp':'image/webp','.gif':'image/gif','.svg':'image/svg+xml','.woff2':'font/woff2','.ttf':'font/ttf','.json':'application/json; charset=utf-8','.md':'text/plain; charset=utf-8'};
+const publicFiles=new Set(['index.html','estilos.css','experiencia.css','adriana.css','configuracion.js','datos.js','servicios.js','qrcode.js','app.js','experiencia.js','Audio.mp3']);
+const types={'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.js':'text/javascript; charset=utf-8','.png':'image/png','.jpg':'image/jpeg','.jpeg':'image/jpeg','.webp':'image/webp','.gif':'image/gif','.svg':'image/svg+xml','.woff2':'font/woff2','.ttf':'font/ttf','.mp3':'audio/mpeg','.json':'application/json; charset=utf-8','.md':'text/plain; charset=utf-8'};
 const server=http.createServer(async(req,res)=>{
   try{
     const url=new URL(req.url,'http://localhost');

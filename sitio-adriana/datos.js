@@ -146,8 +146,8 @@ window.EVENTO_BASE = {
     }
   ],
   "musica": {
-    "archivo": "",
-    "youtube": "-sVB91NTa4A",
+    "archivo": "Audio.mp3",
+    "youtube": "",
     "titulo": "La banda sonora de la velada",
     "volumen": 0.45
   },

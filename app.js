@@ -272,13 +272,43 @@
   function setMusicState(playing) {
     musicPlaying=playing;const button=$('#musicToggle');button.setAttribute('aria-pressed',String(playing));button.setAttribute('aria-label',playing?data.textos.sinMusica:data.textos.musica);button.querySelector('span').textContent=playing?data.textos.sinMusica:data.textos.musica;button.querySelector('use').setAttribute('href',playing?'#i-pause':'#i-music');
   }
+  const eventAudio = $('#eventAudio');
+  let musicStartPending = false;
+  function prepareLocalMusic() {
+    const file = D.safeURL(data.musica.archivo, true);
+    if (!file) return false;
+    if (eventAudio.getAttribute('src') !== file) eventAudio.src = file;
+    eventAudio.volume = Math.min(1, Math.max(0, data.musica.volumen));
+    return true;
+  }
+  function stopWaitingForFirstInteraction() {
+    document.removeEventListener('click', musicOnInteraction, true);
+    document.removeEventListener('keydown', musicOnInteraction, true);
+  }
+  async function tryStartMusic() {
+    if (musicPlaying || musicStartPending || !prepareLocalMusic()) return;
+    musicStartPending = true;
+    try {
+      await eventAudio.play();
+      setMusicState(true);
+      stopWaitingForFirstInteraction();
+    } catch {
+      // Algunos navegadores exigen un gesto: se vuelve a intentar al primer toque o tecla.
+    } finally {
+      musicStartPending = false;
+    }
+  }
+  function musicOnInteraction(event) {
+    if (event.target.closest?.('#musicToggle')) return;
+    void tryStartMusic();
+  }
   async function toggleMusic() {
     if(preview)return;
     const audio=$('#eventAudio');const file=D.safeURL(data.musica.archivo,true);
     if(file) {
       if(musicPlaying){audio.pause();setMusicState(false);return;}
       if(audio.getAttribute('src')!==file)audio.src=file;audio.volume=Math.min(1,Math.max(0,data.musica.volumen));
-      try{await audio.play();setMusicState(true);}catch{setMusicState(false);toast('No se pudo reproducir la música. Revisa el archivo o inténtalo de nuevo.');}return;
+      try{await audio.play();setMusicState(true);stopWaitingForFirstInteraction();}catch{setMusicState(false);toast('No se pudo reproducir la música. Revisa el archivo o inténtalo de nuevo.');}return;
     }
     if(ytPlayer){if(musicPlaying)ytPlayer.pauseVideo();else ytPlayer.playVideo();return;}
     if(ytLoading)return;ytLoading=true;toast('Preparando la música…');
@@ -312,8 +342,10 @@
   $('#rsvpForm').addEventListener('submit',submitResponse);
   $('#editResponse').addEventListener('click',()=>{if(!ownResponse)return;$('#guestName').value=ownResponse.nombre;$('#guestSong').value=ownResponse.cancion;$('#guestMessage').value=ownResponse.mensaje;$('#rsvpForm').querySelector(`input[value="${ownResponse.asiste}"]`).checked=true;$$('.companion-field input').forEach((el,i)=>el.value=ownResponse.acompanantes?.[i] || '');$('#responseCard').hidden=true;$('#rsvpForm').hidden=false;$('#guestName').focus();});
   $('#privateMessageForm').addEventListener('submit',submitPrivateMessage);
+  document.addEventListener('click',musicOnInteraction,true);document.addEventListener('keydown',musicOnInteraction,true);
+  eventAudio.addEventListener('play',()=>setMusicState(true));eventAudio.addEventListener('pause',()=>setMusicState(false));
   $('#musicToggle').addEventListener('click',toggleMusic);$('#eventAudio').addEventListener('error',()=>{setMusicState(false);toast('El archivo de música no está disponible.');});
   let ticking=false;
   window.addEventListener('scroll',()=>{if(ticking)return;ticking=true;requestAnimationFrame(()=>{const max=document.documentElement.scrollHeight-innerHeight;$('#readingProgress').style.width=(max>0?Math.min(100,scrollY/max*100):0)+'%';ticking=false;});},{passive:true});
-  render();observeReveals();loadPersonal();
+  render();observeReveals();loadPersonal();void tryStartMusic();
 })();

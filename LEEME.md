@@ -72,7 +72,7 @@ El ZIP **Adriana-Victoria.zip** contiene los mismos archivos de la invitación y
 - Orden del baile con los seis horarios de tu referencia y espacio para tus imágenes. Sus rutas se indican en `configuracion.js` y los horarios se pueden ajustar en `datos.js`.
 - `retrato.archivo` queda vacío en `datos.js` hasta disponer de una fotografía real de Adriana; el marco muestra su monograma AV.
 - Fotografías de ambientación: no son fotografías de Adriana ni del resort. Sus créditos están en `assets/CREDITOS.md`.
-- Los enlaces al mapa y la música necesitan internet. La música se inicia al pulsar el botón. Las animaciones respetan la preferencia de movimiento reducido.
+- El mapa necesita internet. La música usa el archivo local `Audio.mp3`: intenta comenzar al entrar y, si el navegador bloquea el inicio automático, empieza con el primer toque, clic o tecla. El botón permite pausarla o reanudarla. Las animaciones respetan la preferencia de movimiento reducido.
 - La versión para teléfonos tiene texto ampliado, campos de al menos 16 px, botones táctiles grandes, menú desplegable y carrusel que se puede deslizar. La música se reduce a un botón pequeño y deja espacio al escribir en los formularios.
 - La fecha aparece como información del evento, sin botón para guardarla en un calendario.
 
